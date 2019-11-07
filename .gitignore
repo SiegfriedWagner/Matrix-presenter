@@ -1,0 +1,7 @@
+*__pycache__
+Resources/videos/*
+Resources/images/*
+*.mp4
+Logs/*
+*env*
+*.dump

@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <property name="spacing">
+     <number>6</number>
+    </property>
+    <property name="leftMargin">
+     <number>20</number>
+    </property>
+    <property name="topMargin">
+     <number>20</number>
+    </property>
+    <property name="rightMargin">
+     <number>20</number>
+    </property>
+    <property name="bottomMargin">
+     <number>20</number>
+    </property>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <layout class="QFormLayout" name="formLayout">
+        <item row="0" column="0">
+         <widget class="QLabel" name="participantCodeLabel">
+          <property name="text">
+           <string>Kod Uczestnika</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="participantCodeLineEdit"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="participantGenderLabel">
+          <property name="text">
+           <string>Płeć</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="participantGenderComboBox"/>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="numberOfVideosLabel">
+          <property name="text">
+           <string>Liczba filmów</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QSpinBox" name="numberOfVideosSpinBox">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="orderOfVideosLabel">
+          <property name="text">
+           <string>Kolejnosc filmów</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QComboBox" name="orderOfVideosComboBox">
+          <property name="currentText">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QLabel" name="orderOfMatricesLabel">
+          <property name="text">
+           <string>Kolejność matryc</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QComboBox" name="orderOfMatricesComboBox">
+          <property name="currentText">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0">
+         <widget class="QLabel" name="matrixTimeLabel">
+          <property name="text">
+           <string>Czas trwania matryc</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="1">
+         <widget class="QDoubleSpinBox" name="matrixTimeSpinBox"/>
+        </item>
+        <item row="8" column="0">
+         <widget class="QLabel" name="fixationCrossLabel">
+          <property name="text">
+           <string>Czas trwania krzyżyka fiksacyjnego</string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="1">
+         <widget class="QDoubleSpinBox" name="fixationCrossSpinBox"/>
+        </item>
+        <item row="9" column="0">
+         <widget class="QLabel" name="languageLabel">
+          <property name="text">
+           <string>Język</string>
+          </property>
+         </widget>
+        </item>
+        <item row="9" column="1">
+         <widget class="QComboBox" name="languageComboBox"/>
+        </item>
+        <item row="10" column="0">
+         <widget class="QLabel" name="saveDirectoryLabel">
+          <property name="text">
+           <string>Ścieżka do pliku</string>
+          </property>
+         </widget>
+        </item>
+        <item row="10" column="1">
+         <widget class="QPushButton" name="saveDirectoryPushButton">
+          <property name="text">
+           <string>Folder do zapisu wyników</string>
+          </property>
+         </widget>
+        </item>
+        <item row="11" column="0">
+         <widget class="QLabel" name="tutorialLabel">
+          <property name="text">
+           <string>Tutorial</string>
+          </property>
+         </widget>
+        </item>
+        <item row="12" column="0">
+         <widget class="QLabel" name="tutorialMatrixTimeLabel">
+          <property name="text">
+           <string>Czas trwania prezentacji matryc </string>
+          </property>
+         </widget>
+        </item>
+        <item row="12" column="1">
+         <widget class="QDoubleSpinBox" name="tutorialMatrixTimeSpinBox"/>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="startingGroupLabel">
+          <property name="text">
+           <string>Początkowa grupa filmów</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QComboBox" name="startingGroupComboBox"/>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QPushButton" name="saveSettingsPushButton">
+        <property name="text">
+         <string>Zapisz Ustawienia</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="runExperimentPushButton">
+        <property name="text">
+         <string>Uruchom</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>24</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+  </widget>
+ </widget>
+ <tabstops>
+  <tabstop>runExperimentPushButton</tabstop>
+  <tabstop>participantCodeLineEdit</tabstop>
+  <tabstop>participantGenderComboBox</tabstop>
+  <tabstop>numberOfVideosSpinBox</tabstop>
+  <tabstop>orderOfVideosComboBox</tabstop>
+  <tabstop>orderOfMatricesComboBox</tabstop>
+  <tabstop>matrixTimeSpinBox</tabstop>
+  <tabstop>saveDirectoryPushButton</tabstop>
+  <tabstop>languageComboBox</tabstop>
+  <tabstop>fixationCrossSpinBox</tabstop>
+  <tabstop>saveSettingsPushButton</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>
