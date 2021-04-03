@@ -12,25 +12,10 @@ class Model:
 
     def __init__(self):
         log.debug("Creating model at {}".format(self))
-        if Settings.order_of_matrices == 'sorted':
-            self.__matrices = sorted(Resources.images)
-        else:
-            raise NotImplementedError("Option {} is not implemented.".format(Settings.duration_of_matrices))
-        if Settings.order_of_videos == 'sorted':
-            self.__videos = sorted(Resources.get_videos())
-            self.__tutorial_video = self.__videos.pop(0)
-        elif Settings.order_of_videos == 'random':
-            self.__videos = sorted(Resources.get_videos())
-            self.__tutorial_video = self.__videos.pop(0)
-            random.shuffle(self.__videos)
-        elif Settings.order_of_videos == 'two batches, random':
-            self.__videos = Resources.get_videos()
-            self.__tutorial_video = self.__videos.pop(0)
-        else:
-            raise NotImplementedError("Option {} is not implemented.".format(Settings.order_of_videos))
         self.current_video = None
         self.video_played = 0
         self.participant = None
+        self.__matrices = []
 
     @property
     def matrices(self):
@@ -47,7 +32,7 @@ class Model:
     def createParticipant(self, name, gender):
         log.debug("Creating participant with name {}".format(name))
         self.participant = Participant(name, gender)
-
+        self.video_played = 0
 
     def video_generator(self, num_of_videos=None):
         if num_of_videos is None:
@@ -80,6 +65,23 @@ class Model:
         if self.participant is not None:
             self.participant.save_result()
 
+    def load_settings(self):
+        if Settings.order_of_matrices == 'sorted':
+            self.__matrices = sorted(Resources.images)
+        else:
+            raise NotImplementedError("Option {} is not implemented.".format(Settings.duration_of_matrices))
+        if Settings.order_of_videos == 'sorted':
+            self.__videos = sorted(Resources.get_videos())
+            self.__tutorial_video = self.__videos.pop(0)
+        elif Settings.order_of_videos == 'random':
+            self.__videos = sorted(Resources.get_videos())
+            self.__tutorial_video = self.__videos.pop(0)
+            random.shuffle(self.__videos)
+        elif Settings.order_of_videos == 'two batches, random':
+            self.__videos = Resources.get_videos()
+            self.__tutorial_video = self.__videos.pop(0)
+        else:
+            raise NotImplementedError("Option {} is not implemented.".format(Settings.order_of_videos))
 
 class Participant:
     __slots__ = ('name', 'gender', 'videos', 'matrices', 'correctness', 'response_times')
@@ -101,7 +103,7 @@ class Participant:
             self.correctness.append('0')
         self.response_times.append(time)
 
-    def save_result(self, path: str=None, data_header: bool=True) -> None:
+    def save_result(self, path: str = None, data_header: bool = True) -> None:
         if path is None:
             path = str(Settings.log_save_directory) + '/' + self.name
         if os.path.exists(path):

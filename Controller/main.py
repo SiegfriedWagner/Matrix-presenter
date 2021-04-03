@@ -18,9 +18,9 @@ class EmptyFieldException(ValueError):
 
 class MainControler(QObject):
 
-    def __init__(self, view: MainView):
+    def __init__(self, view: MainView, model: Model):
         super().__init__()
-        self.model = None
+        self.model = model
         self.controllers = {'main': self}
         view.saveSettingsPushButton.clicked.connect(self.saveSettings)
         view.runExperimentPushButton.clicked.connect(self.runExperiment)
@@ -30,12 +30,12 @@ class MainControler(QObject):
     def runExperiment(self, *args):
         try:
             self.getSettings()
+            self.model.load_settings()
             import_text()
         except Exception as e:
             QMessageBox.warning(self.views['main'], "", "Kod uczestnika nie może być pusty")
             log.debug(*e.args)
             return
-        self.model = Model()
         self.model.createParticipant(self.views['main'].participantCodeLineEdit.text(),
                                      self.views['main'].participantGenderComboBox.currentText())
         self.views['experiment'] = ExperimentView(model=self.model, size=QApplication.desktop().screenGeometry(QApplication.desktop().primaryScreen()).size())
