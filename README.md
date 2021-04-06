@@ -2,9 +2,9 @@
 1. Python 3 installed od system. [Tutorial can be found here](https://www.youtube.com/watch?v=yNLw5G1Y65o)
 2. (On Windows system) K-Lite codecs pack [Can be downloaded from here](https://www.codecguide.com/download_kl.htm)
 # Instalation
- - (On Windows system) After installing all required software to install experiment software execute install.bat
+ - (On Windows system) After installing all required software to install experiment software execute install.ps1
 # Execution
-- (On Windows system) To run experiment software execute run.bat.
+- (On Windows system) To run experiment software execute MatrixPresenter.lnk created by installation script.
 # Resources
 To execute properly application needs both videos in `Resources/videos` and matrices in `Resources/images`.
 # New language text files
