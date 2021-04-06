@@ -5,3 +5,8 @@ Resources/images/*
 Logs/*
 *env*
 *.dump
+*.lnk
+
+# IDE files
+.idea/*
+.vscode/*

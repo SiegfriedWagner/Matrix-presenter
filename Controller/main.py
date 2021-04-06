@@ -10,6 +10,7 @@ from Model.model import Model
 from View.experiment import ExperimentView
 from View.main import MainView
 from Resources import import_text
+from Classes.logging import exp_logger, set_file_handler
 
 
 class EmptyFieldException(ValueError):
@@ -18,9 +19,9 @@ class EmptyFieldException(ValueError):
 
 class MainControler(QObject):
 
-    def __init__(self, view: MainView):
+    def __init__(self, view: MainView, model: Model):
         super().__init__()
-        self.model = None
+        self.model = model
         self.controllers = {'main': self}
         view.saveSettingsPushButton.clicked.connect(self.saveSettings)
         view.runExperimentPushButton.clicked.connect(self.runExperiment)
@@ -30,17 +31,19 @@ class MainControler(QObject):
     def runExperiment(self, *args):
         try:
             self.getSettings()
+            self.model.load_settings()
             import_text()
         except Exception as e:
             QMessageBox.warning(self.views['main'], "", "Kod uczestnika nie może być pusty")
             log.debug(*e.args)
             return
-        self.model = Model()
-        self.model.createParticipant(self.views['main'].participantCodeLineEdit.text(),
-                                     self.views['main'].participantGenderComboBox.currentText())
+        participant_code = self.views['main'].participantCodeLineEdit.text()
+        self.model.create_participant(participant_code,
+                                      self.views['main'].participantGenderComboBox.currentText())
+        set_file_handler(participant_code)
+        exp_logger.info("Experiment started")
         self.views['experiment'] = ExperimentView(model=self.model, size=QApplication.desktop().screenGeometry(QApplication.desktop().primaryScreen()).size())
         self._tutorial()
-        #self._experiment()
 
     def _tutorial(self):
         tut = TutorialController(parent=self, name='tutorial', model=self.model, view=self.views['experiment'])

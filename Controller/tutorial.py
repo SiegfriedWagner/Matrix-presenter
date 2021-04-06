@@ -5,6 +5,7 @@ from Controller import ExperimentController
 from Model import Model
 from View import ExperimentView
 from View.Widgets import Matrix
+from Classes.logging import exp_logger
 
 
 class TutorialController(ExperimentController):
@@ -30,26 +31,32 @@ class TutorialController(ExperimentController):
     def tutorial_generator(self):
         self.view.text_panel.setContent(Resources.text.introduction)
         self.view.text_panel.on_click = lambda :next(self.tutorial_precedure)
+        exp_logger.info("Tutorial: introduction")
         yield
         self.view.text_panel.setContent(Resources.text.description)
+        exp_logger.info("Tutorial: description")
         yield
         self.timeout = Settings.Settings.tutorial_duration_of_matrices
         self.view.changePanelTo(self.view.matrices_widget)
+        exp_logger.info("Tutorial: matrices")
         yield
         self.view.text_panel.setContent(Resources.text.example)
         self.view.changePanelTo(self.view.text_panel)
+        exp_logger.info("Tutorial: Example task")
         yield
         self.timeout = Settings.Settings.duration_of_matrices
         for matrix in self.view.matrices_widget.matrices:
             matrix.on_click = self.matrixPush, {'matrix': matrix}
         self.view.video_widget.video_path = self.model._Model__tutorial_video
         self.view.changePanelTo(self.view.video_widget)
+        exp_logger.info(f"Tutorial: playing video: {self.model._Model__tutorial_video}")
         yield
         self.view.changePanelTo(self.view.text_panel)
         # yield
         # self.view.text_panel.setContent(Resources.text.end_of_tutorial)
         yield
         self.on_finish()
+        exp_logger.info("Tutorial: end ")
         yield
 
     def timerEvent(self, QTimerEvent):

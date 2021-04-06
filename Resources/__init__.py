@@ -1,18 +1,24 @@
 import os
 import glob
 import random
+from pathlib import Path
+
+__videos_path = Path(__file__).parent.joinpath("videos")
+
 
 def get_batches():
-    files = glob.glob("./Resources/videos/*")
+    files = glob.glob(str(__videos_path.joinpath('*')))
     dirs = list(filter(os.path.isdir, files))
     return dirs
+
 
 def get_videos():
     from Settings import Settings
     if Settings.order_of_videos != "two batches, random":
-        videos = [os.path.abspath(path) for path in glob.glob('./Resources/videos/*')] # TODO: Fixme pathing
+        videos = [os.path.abspath(path) for path in glob.glob(str(__videos_path.joinpath('**/*')))] # TODO: Fixme pathing
+        print(videos)
         if videos == []:
-            raise ValueError("No videos found in " + os.path.abspath("./Resources"))  # TODO: Fixme pathing
+            raise ValueError("No videos found in " + str(__videos_path))  # TODO: Fixme pathing
         return videos
     else:
         dirs = get_batches()
@@ -41,6 +47,7 @@ for language_file in glob.glob('./Resources/text/*'):
         languages.append(name)
 if languages == []:
     raise ValueError("No language files found in " + os.path.abspath("./Resources/text"))
+
 
 def import_text():
     global text

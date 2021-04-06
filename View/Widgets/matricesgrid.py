@@ -1,7 +1,7 @@
 import logging as log
 from typing import List
 from PyQt5 import QtGui, QtCore
-from PyQt5.QtCore import pyqtSignal
+from Classes.logging import exp_logger
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QLabel, QWidget, QVBoxLayout, QProgressBar, QSizePolicy, QHBoxLayout, QLayout, QSpacerItem
 
@@ -16,6 +16,7 @@ class Matrix(QLabel):
         super().__init__(parent=parent)
         if name is None:
             name = picture
+        self.name = name
         self.pic: QPixmap = None
         self.name = str(name)
         pic = QPixmap()
@@ -39,7 +40,9 @@ class Matrix(QLabel):
             super().setFixedSize(a0)
 
     def mousePressEvent(self, ev: QtGui.QMouseEvent):
+        exp_logger.info(f"Matrix clicked {self.name}")
         self.on_click()
+
 
 class MatricesGrid(QWidget):
     on_show = FuncDescriptor()
