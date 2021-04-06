@@ -100,6 +100,7 @@ class Participant:
                                                                                                     '.new'))
             path += '.new'
             self.enable_saving(path, data_header)
+            return 
         os.makedirs(path)
         csv_path = os.path.join(path, 'data.csv')
         file_handler = logging.FileHandler(csv_path, 'a', 'UTF-8', False)
