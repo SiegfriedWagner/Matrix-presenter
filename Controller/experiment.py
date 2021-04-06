@@ -1,22 +1,18 @@
 import logging as log
 import time
-import Classes.abstract
 import Resources
 import Settings
-from PyQt5.QtCore import QTimer, QBasicTimer, pyqtSignal, QObject
-from PyQt5.QtGui import QMouseEvent
-
+from PyQt5.QtCore import QBasicTimer, pyqtSignal, QObject
 from Classes import FuncDescriptor
 from View.experiment import ExperimentView
 from View.Widgets.matricesgrid import Matrix
-from View.Widgets.videoplayer import VideoPlayer
 from Model.model import Model
-
 
 
 class ExperimentController(QObject):
     valueChangeSignal = pyqtSignal(int)
     on_finish = FuncDescriptor()
+
     def __init__(self, parent, name, model: Model, view: ExperimentView):
         super().__init__(parent=parent)
         log.debug('Init ExperimentController')
@@ -50,7 +46,6 @@ class ExperimentController(QObject):
             self.view.video_widget.video_path = next(self.video_generator)
             self.view.changePanelTo(self.view.fixation_cross)
         except StopIteration: #TODO remove duplicate
-            self.model.finish()
             self.view.changePanelTo(self.view.text_panel)
 
 
@@ -68,7 +63,7 @@ class ExperimentController(QObject):
         if value > Settings.Settings.duration_of_matrices:
             self.missAnswer()
         elif self.view.matrices_widget.progress_bar.value() != value and value > 0:
-            log.debug("Setting changebar value to:" + str(int(value * 1000 / Settings.Settings.duration_of_matrices)))
+            log.debug("Setting change bar value to:" + str(int(value * 1000 / Settings.Settings.duration_of_matrices)))
             self.valueChangeSignal.emit(int(value * 1000 / Settings.Settings.duration_of_matrices))
             self.view.update()
 
@@ -79,6 +74,5 @@ class ExperimentController(QObject):
             self.view.video_widget.video_path = next(self.video_generator)
             self.view.changePanelTo(self.view.fixation_cross)
         except StopIteration:
-            self.model.finish()
             self.view.changePanelTo(self.view.text_panel)
 

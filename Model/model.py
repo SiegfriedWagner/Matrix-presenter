@@ -1,17 +1,18 @@
 import copy
-import logging as log
+from Classes.logging import exp_logger
+import logging
 import os
-import pickle
 import random
 import json
 import Resources
 from Settings import Settings
+import uuid
 
 
 class Model:
 
     def __init__(self):
-        log.debug("Creating model at {}".format(self))
+        logging.debug("Creating model at {}".format(self))
         self.current_video = None
         self.video_played = 0
         self.participant = None
@@ -29,10 +30,11 @@ class Model:
             raise ValueError(f"Not enough films, please make sure that there are enough ({Settings.number_of_videos} required) video files in Resources/videos directory")
         return copy.deepcopy(self.__videos)
 
-    def createParticipant(self, name, gender):
-        log.debug("Creating participant with name {}".format(name))
+    def create_participant(self, name, gender):
+        exp_logger.info(f"Creating participant with name {name}")
         self.participant = Participant(name, gender)
         self.video_played = 0
+        self.participant.enable_saving()
 
     def video_generator(self, num_of_videos=None):
         if num_of_videos is None:
@@ -56,14 +58,10 @@ class Model:
             response_time = 0
         video = os.path.basename(self.current_video)
         video, _ = video.split('.')
-        log.debug('Got response {}'.format(matrice_picture_path))
-        log.debug('Response video {}'.format(self.current_video))
+        logging.debug('Got response {}'.format(matrice_picture_path))
+        logging.debug('Response video {}'.format(self.current_video))
         if self.participant is not None:
             self.participant.process_response(video, matrice_picture_path, response_time)
-
-    def finish(self):
-        if self.participant is not None:
-            self.participant.save_result()
 
     def load_settings(self):
         if Settings.order_of_matrices == 'sorted':
@@ -83,52 +81,43 @@ class Model:
         else:
             raise NotImplementedError("Option {} is not implemented.".format(Settings.order_of_videos))
 
+
 class Participant:
-    __slots__ = ('name', 'gender', 'videos', 'matrices', 'correctness', 'response_times')
+    __slots__ = ('name', 'gender', 'experiment_data_logger')
 
     def __init__(self, name, gender):
         self.name = name
         self.gender = gender
-        self.matrices = []
-        self.videos = []
-        self.correctness = []
-        self.response_times = []
+        self.experiment_data_logger = logging.getLogger(f'data_logger_{uuid.uuid4()}')
+        self.experiment_data_logger.setLevel(logging.INFO)
 
-    def process_response(self, video, matrix, time):
-        self.videos.append(video)
-        self.matrices.append(matrix)
-        if video == matrix:
-            self.correctness.append('1')
-        else:
-            self.correctness.append('0')
-        self.response_times.append(time)
-
-    def save_result(self, path: str = None, data_header: bool = True) -> None:
+    def enable_saving(self, path: str = None, data_header: bool = True) -> None:
         if path is None:
             path = str(Settings.log_save_directory) + '/' + self.name
         if os.path.exists(path):
-            log.warning("Folder {} exist, data from current participant will be saved in {}".format(path,
+            logging.warning("Folder {} exist, data from current participant will be saved in {}".format(path,
                                                                                                     path +
                                                                                                     '.new'))
             path += '.new'
-        try:
-            os.makedirs(path)
-            with open(path + '/data.csv', 'w') as f:
-                if data_header:
-                    f.write("# matrix_number, video_number, response_time, correctness\n")
-                for matrix, video, resp, corr in zip(self.matrices,
-                                                     self.videos,
-                                                     self.response_times,
-                                                     self.correctness):
-                    f.writelines("{}, {}, {:.3f}, {}\n".format(matrix, video, resp,
-                                                      corr))  # TODO: Check in windows if \r is required
-            with open(path + '/meta.json', 'w') as f:
-                retu = Settings.to_dict()
-                retu['gender'] = self.gender
-                retu['name'] = self.name
-                f.write(json.dumps(retu, indent=2))
-        except IOError:
-            dump_file = './' + self.name + '.dump'
-            with open(dump_file, 'wb') as f:
-                pickle.dump(self, f)
-            log.critical("IOError occured, participant was dumped into " + str(dump_file))
+            self.enable_saving(path, data_header)
+        os.makedirs(path)
+        csv_path = os.path.join(path, 'data.csv')
+        file_handler = logging.FileHandler(csv_path, 'a', 'UTF-8', False)
+        file_handler.setFormatter(logging.Formatter("%(message)s"))
+        self.experiment_data_logger.addHandler(file_handler)
+        if data_header:
+            self.experiment_data_logger.info("# matrix_number, video_number, response_time, correctness")
+        with open(os.path.join(path, "meta.json",), 'w') as f:
+            retu = Settings.to_dict()
+            retu['gender'] = self.gender
+            retu['name'] = self.name
+            f.write(json.dumps(retu, indent=2))
+        exp_logger.info(f"Saving records enabled. Csv file path {csv_path}")
+
+    def process_response(self, video, matrix, response_time):
+        if video == matrix:
+            correct = '1'
+        else:
+            correct = '0'
+        self.experiment_data_logger.info("{}, {}, {:.3f}, {}".format(
+            matrix, video, response_time, correct))
