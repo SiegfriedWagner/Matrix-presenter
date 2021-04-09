@@ -15,15 +15,18 @@ def get_batches():
 def get_videos():
     from Settings import Settings
     if Settings.order_of_videos != "two batches, random":
-        videos = [os.path.abspath(path) for path in glob.glob(str(__videos_path.joinpath('**/*')))] # TODO: Fixme pathing
-        print(videos)
+        videos = [os.path.abspath(path) for path in glob.glob(str(__videos_path.joinpath('**')))] # TODO: Fixme pathing
         if videos == []:
             raise ValueError("No videos found in " + str(__videos_path))  # TODO: Fixme pathing
         return videos
     else:
         dirs = get_batches()
         if len(dirs) != 2:
-            raise ValueError(f"Found more than two film batches ({dirs}), don't know what to do :<")
+            if len(dirs) > 2:
+                raise ValueError(f"Found more than two film batches ({len(dirs)}), don't know what to do :<")
+            else:
+                raise ValueError(f"Found less than 2 batches ({len(dirs)}), don't know what to do :<")
+
         dirs.remove(Settings._starting_batch)
         first = Settings._starting_batch
         second = dirs[0]

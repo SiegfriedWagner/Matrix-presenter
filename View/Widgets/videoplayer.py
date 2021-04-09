@@ -31,11 +31,11 @@ class VideoPlayer(QVideoWidget):
     def video_path(self, value):
         log.debug(" _video_path set to {}".format(value))
         self._video_path = value
-        self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(self._video_path)))
+        self.q_url = QUrl.fromLocalFile(self._video_path)
+        self.mediaPlayer.setMedia(QMediaContent(self.q_url))
 
     def showEvent(self, event: QtGui.QShowEvent):
         super().showEvent(event)
-        log.debug('{}.showEvent()')
         exp_logger.info(f"Playing video: {self.video_path}")
         self.mediaPlayer.play()
 

@@ -34,7 +34,7 @@ class MainControler(QObject):
             self.model.load_settings()
             import_text()
         except Exception as e:
-            QMessageBox.warning(self.views['main'], "", "Kod uczestnika nie może być pusty")
+            QMessageBox.warning(self.views['main'], "", e.args[0])
             log.debug(*e.args)
             return
         participant_code = self.views['main'].participantCodeLineEdit.text()
